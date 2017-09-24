@@ -47,7 +47,7 @@ class App extends Component {
 			return null;
 		}
 
-		if (dir[0] + dir[1] > 1 || dir[0] + dir[1] < -1){
+		if (dir[0] + dir[1] > 1 || dir[0] + dir[1] < -1 || dir[0] + dir[1] === 0){
 			return null;
 		}
 

@@ -1,8 +1,7 @@
 {
-  "name": "slide-puzzle",
+  "name": "test",
   "version": "0.1.0",
-  "private": false,
-  "homepage": "https://viorelrj.github.io/slide-puzzle/",
+  "private": true,
   "dependencies": {
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
