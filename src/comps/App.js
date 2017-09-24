@@ -28,51 +28,40 @@ class App extends Component {
 		}
 	}
 
-	reArrange(direction) {
-		let state = this.state;
-		let player = state.player;
+	reArrange(dir) {
+		let board = this.state.board;
+		let player = this.state.player;
 
-		switch(direction){
-			case "left":
-				if (player.block > 0) {
-					let leftBlock = state.board[player.row][player.block - 1];
-					state.board[player.row].splice(player.block - 1, 1, 0);
-					state.board[player.row][player.block] = leftBlock;
-					state.player.block--;
-					this.setState(state);
-				}
-				break;
-
-			case "right":
-				if (player.block < this.state.board.length -1) {
-					let rightBlock = state.board[player.row][player.block + 1];
-					state.board[player.row].splice(player.block + 1, 1, 0);
-					state.board[player.row][player.block] = rightBlock;
-					state.player.block++;
-					this.setState(state);
-				}
-				break;
-			case "up": 
-				if (player.row > 0) {
-					let upperBlock = state.board[player.row-1][player.block];
-					state.board[player.row-1].splice(player.block, 1 , 0);
-					state.board[player.row][player.block] = upperBlock;
-					state.player.row--;
-					this.setState(state);
-				}
-				break;
-			case "down":
-				if (player.row < this.state.board.length -1) {
-					let lowerBlock = state.board[player.row + 1][player.block];
-					state.board[player.row+1].splice(player.block, 1, 0);
-					state.board[player.row][player.block] = lowerBlock;
-					state.player.row++;
-					this.setState(state);
-				}
-				break;
-			default:
-				return null;
+		if (!board[player.row + dir[0]]) {
+			return null;
 		}
+		if (!board[player.row + dir[0]][player.block + dir[1]]) {
+			return null;
+		}
+
+		if (dir[0] > 1 || dir[0] < -1){
+			return null;
+		}
+
+		if (dir[1] > 1 || dir[1] < -1){
+			return null;
+		}
+
+		if (dir[0] + dir[1] > 1 || dir[0] + dir[1] < -1){
+			return null;
+		}
+
+		let backupBlock = board[player.row + dir[0]][player.block + dir[1]];
+		board[player.row + dir[0]].splice(player.block + dir[1], 1, 0);
+		board[player.row][player.block] = backupBlock;
+		player = {
+			row: player.row + dir[0],
+			block: player.block + dir[1]
+		}
+		this.setState({
+			board: board,
+			player: player
+		})
 	}
 
 	listenKeys(){
@@ -80,21 +69,26 @@ class App extends Component {
 		document.onkeydown = function(evt) {
 			switch(evt.keyCode){
 				case 37:
-					reArrange('left');
+					reArrange([0, -1]);
 					break;
 				case 38:
-					reArrange('up');
+					reArrange([-1, 0]);
 					break;
 				case 39:
-					reArrange('right');
+					reArrange([0, 1]);
 					break;
 				case 40:
-					reArrange('down');
+					reArrange([1, 0]);
 					break;
 				default:
 					return null;
 			}
 		}
+	}
+
+	listenClick(ev){
+		let player = this.state.player
+		this.reArrange([ev.row - player.row, ev.block - player.block]);
 	}
 
 	componentDidMount(){
@@ -111,6 +105,7 @@ class App extends Component {
 			<div className="App">
 				<Body 
 					board={this.state.board}
+					listenClick={this.listenClick.bind(this)}
 				/>
 			</div>
 		);

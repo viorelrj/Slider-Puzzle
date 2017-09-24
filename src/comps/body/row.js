@@ -4,10 +4,15 @@ import Block from './block.js';
 
 class Row extends Component {
 	render() {
-		console.log(this.props);
+		const listenClick = this.props.listenClick;
+		const rowCounter = this.props.rowCounter;
+
 		let row = this.props.row;
 		let blocks = row.map((item, i) =>
 			<Block
+				listenClick={listenClick}
+				rowCounter={rowCounter}
+				blockCounter={i}
 				id={item}
 				key={i}
 			/>
